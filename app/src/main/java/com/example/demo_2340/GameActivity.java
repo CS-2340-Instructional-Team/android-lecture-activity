@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -20,6 +22,7 @@ public class GameActivity extends AppCompatActivity {
     int screenWidth;
     int screenHeight;
     private Map<Dot, DotView> dotViewMap = new HashMap<>();
+    private Timer dotTimer;
 
 
     @Override
@@ -37,9 +40,27 @@ public class GameActivity extends AppCompatActivity {
         // Create red dot
         playerView = new PlayerView(this, playerX, playerY, 100);
         gameLayout.addView(playerView);
+        // Create dot list
         initializeDots();
+        // Draw dots on screen
         drawDots();
 
+
+        /*
+        Timer to call checkCollisions every .5 seconds to determine if dots have expired yet.
+         */
+        dotTimer = new Timer();
+        dotTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        checkCollisions();
+                    }
+                });
+            }
+        }, 0, 500); // Check every .5 seconds
     }
 
     // Handle key events to move the player
@@ -66,7 +87,7 @@ public class GameActivity extends AppCompatActivity {
 
     private void initializeDots() {
         // Create and add dots with random positions
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 20; i++) {
             float randomX = random.nextFloat() * screenWidth;
             float randomY = random.nextFloat() * screenHeight;
             int radius = 50;
@@ -95,6 +116,11 @@ public class GameActivity extends AppCompatActivity {
             if (dot.isVisible() && isCollision(playerView, dot)) {
                 dot.setInvisible();
                 gameLayout.removeView(dotViewMap.get(dot));
+                dots.remove(i);
+            } else if (dot.isExpired()) { // Checks if dots have run out of time.
+                dot.setInvisible();
+                gameLayout.removeView(dotViewMap.get(dot));
+                dots.remove(i);
             }
         }
     }
@@ -119,4 +145,4 @@ public class GameActivity extends AppCompatActivity {
 
             return playerRect.intersect(dotRect);
         }
-    }
+}
