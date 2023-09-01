@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">S0</string>
+    <string name="app_name">demo_2340</string>
     <string name="title">MyStack App</string>
     <string name="top_descriptor">Top of MyStack:</string>
     <string name="top_initial_text">Push a string below to start</string>
