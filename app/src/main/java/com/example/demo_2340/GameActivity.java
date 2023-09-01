@@ -1,12 +1,9 @@
 package com.example.demo_2340;
 import android.graphics.RectF;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.RelativeLayout;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +30,7 @@ public class GameActivity extends AppCompatActivity {
         gameLayout = findViewById(R.id.gameLayout);
         screenWidth = getResources().getDisplayMetrics().widthPixels;
         screenHeight = getResources().getDisplayMetrics().heightPixels;
+        // Spawn player in middle of screen
         playerX = screenWidth / 2;
         playerY = screenHeight / 2;
 
@@ -77,6 +75,9 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    /*
+    Method to create dot objects. Maps a dot object to a specific dotView.
+     */
     private void drawDots() {
         for (Dot dot : dots) {
             DotView newDot = new DotView(this, dot);
@@ -85,17 +86,22 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    /*
+    Method that checks to see if any collision has occurred.
+     */
     private void checkCollisions() {
         for (int i = 0; i < dots.size(); i++) {
             Dot dot = dots.get(i);
             if (dot.isVisible() && isCollision(playerView, dot)) {
-                Log.d("collide", "dot:" + dot.getX() + dot.getY());
                 dot.setInvisible();
                 gameLayout.removeView(dotViewMap.get(dot));
             }
         }
     }
 
+    /*
+    Method that has logic to detect collisions.
+    */
     private boolean isCollision(PlayerView playerView, Dot dot) {
             float playerX = playerView.getX();
             float playerY = playerView.getY();
@@ -104,6 +110,10 @@ public class GameActivity extends AppCompatActivity {
             float dotY = dot.getY();
             int dotRadius = dot.getRadius();
 
+            /*
+            Creates a rectangle around dot, and checks for an intersection between player rect and
+            dot rect. Intersection = collision.
+             */
             RectF playerRect = new RectF(playerX - playerRadius, playerY - playerRadius, playerX + playerRadius, playerY + playerRadius);
             RectF dotRect = new RectF(dotX - dotRadius, dotY - dotRadius, dotX + dotRadius, dotY + dotRadius);
 
