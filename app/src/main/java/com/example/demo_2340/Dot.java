@@ -1,16 +1,19 @@
 package com.example.demo_2340;
 
-public class Dot {
+import android.graphics.Color;
 
+public class Dot {
     private float x, y;
     private int radius;
     private boolean isVisible;
+    private int color;
 
     public Dot(float x, float y, int radius) {
         this.x = x;
         this.y = y;
         this.radius = radius;
         this.isVisible = true;
+        this.color = Color.BLUE;
     }
 
     public float getX() {
@@ -31,15 +34,5 @@ public class Dot {
 
     public void setInvisible() {
         isVisible = false;
-    }
-
-    public boolean checkCollision(float playerX, float playerY, int playerRadius) {
-        if (isVisible) {
-            float dx = x - playerX;
-            float dy = y - playerY;
-            float distance = (float) Math.sqrt(dx * dx + dy * dy);
-            return distance < (radius + playerRadius);
-        }
-        return false;
     }
 }

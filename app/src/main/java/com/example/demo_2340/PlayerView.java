@@ -32,4 +32,16 @@ public class PlayerView extends View {
         y = newY;
         invalidate();
     }
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public int getRadius() {
+        return radius;
+    }
+
 }
