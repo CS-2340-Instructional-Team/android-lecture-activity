@@ -3,6 +3,8 @@ import android.graphics.RectF;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +26,8 @@ public class GameActivity extends AppCompatActivity {
     private Map<Dot, DotView> dotViewMap = new HashMap<>();
     private Timer dotTimer;
     private static final int MAX_DOTS = 20;
+    private TextView dotCountTextView;
+    private int dotCount = 0;
 
 
     @Override
@@ -32,6 +36,7 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
 
         gameLayout = findViewById(R.id.gameLayout);
+        dotCountTextView = findViewById(R.id.dotCountTextView);
         screenWidth = getResources().getDisplayMetrics().widthPixels;
         screenHeight = getResources().getDisplayMetrics().heightPixels;
         // Spawn player in middle of screen
@@ -45,7 +50,6 @@ public class GameActivity extends AppCompatActivity {
         initializeDots();
         // Draw dots on screen
         drawDots();
-
 
         /*
         Timer to call checkCollisions every .5 seconds to determine if dots have expired yet.
@@ -144,6 +148,8 @@ public class GameActivity extends AppCompatActivity {
                 dot.setInvisible();
                 gameLayout.removeView(dotViewMap.get(dot));
                 dots.remove(i);
+                dotCount++;
+                dotCountTextView.setText("Dots Collected: " + dotCount);
             } else if (dot.isExpired()) { // Checks if dots have run out of time.
                 dot.setInvisible();
                 gameLayout.removeView(dotViewMap.get(dot));

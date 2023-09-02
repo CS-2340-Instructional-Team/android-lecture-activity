@@ -12,4 +12,16 @@
         android:layout_height="match_parent"
         />
 
+    <TextView
+        android:id="@+id/dotCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="Dots Collected: 0"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+
 </RelativeLayout>
