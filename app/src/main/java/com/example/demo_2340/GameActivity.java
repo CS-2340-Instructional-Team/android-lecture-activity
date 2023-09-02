@@ -1,6 +1,8 @@
 package com.example.demo_2340;
+import android.content.Intent;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -34,7 +36,6 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-
         gameLayout = findViewById(R.id.gameLayout);
         dotCountTextView = findViewById(R.id.dotCountTextView);
         screenWidth = getResources().getDisplayMetrics().widthPixels;
@@ -113,20 +114,16 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    // Maintains 20 dots on screen
     private void respawnDotsIfNeeded() {
-        int visibleDotCount = 0;
-        for (Dot dot : dots) {
-            if (dot.isVisible()) {
-                visibleDotCount++;
-            }
-        }
-
+        int visibleDotCount = dots.size();
         int dotsToRespawn = MAX_DOTS - visibleDotCount;
         for (int i = 0; i < dotsToRespawn; i++) {
             respawnDot();
         }
     }
 
+    // Recreates the dots. Respawn mechanic
     private void respawnDot() {
         float randomX = random.nextFloat() * screenWidth;
         float randomY = random.nextFloat() * screenHeight;
@@ -149,7 +146,12 @@ public class GameActivity extends AppCompatActivity {
                 gameLayout.removeView(dotViewMap.get(dot));
                 dots.remove(i);
                 dotCount++;
+
                 dotCountTextView.setText("Dots Collected: " + dotCount);
+                if (dotCount >= 100) { // 100 dots collected needed to win.
+                    Log.d("DOTS", "GAME WIN" + dotCount);
+                    launchGameWinActivity();
+                }
             } else if (dot.isExpired()) { // Checks if dots have run out of time.
                 dot.setInvisible();
                 gameLayout.removeView(dotViewMap.get(dot));
@@ -177,5 +179,12 @@ public class GameActivity extends AppCompatActivity {
         RectF dotRect = new RectF(dotX - dotRadius, dotY - dotRadius, dotX + dotRadius, dotY + dotRadius);
 
         return playerRect.intersect(dotRect);
+    }
+
+    // Changes game screen to GameWinActivity
+    private void launchGameWinActivity() {
+        Intent intent = new Intent(this, GameWinActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

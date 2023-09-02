@@ -20,6 +20,8 @@
         <activity
             android:name=".GameActivity"
             android:exported="false" />
+        <activity android:name=".GameWinActivity"
+            android:exported="false" />
 
     </application>
 
