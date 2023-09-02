@@ -23,6 +23,7 @@ public class GameActivity extends AppCompatActivity {
     int screenHeight;
     private Map<Dot, DotView> dotViewMap = new HashMap<>();
     private Timer dotTimer;
+    private static final int MAX_DOTS = 20;
 
 
     @Override
@@ -57,6 +58,7 @@ public class GameActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         checkCollisions();
+                        respawnDotsIfNeeded();
                     }
                 });
             }
@@ -107,6 +109,31 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    private void respawnDotsIfNeeded() {
+        int visibleDotCount = 0;
+        for (Dot dot : dots) {
+            if (dot.isVisible()) {
+                visibleDotCount++;
+            }
+        }
+
+        int dotsToRespawn = MAX_DOTS - visibleDotCount;
+        for (int i = 0; i < dotsToRespawn; i++) {
+            respawnDot();
+        }
+    }
+
+    private void respawnDot() {
+        float randomX = random.nextFloat() * screenWidth;
+        float randomY = random.nextFloat() * screenHeight;
+        int radius = 50;
+        Dot dot = new Dot(randomX, randomY, radius);
+        dots.add(dot);
+        DotView dotView = new DotView(this, dot);
+        gameLayout.addView(dotView);
+        dotViewMap.put(dot, dotView);
+    }
+
     /*
     Method that checks to see if any collision has occurred.
      */
@@ -129,20 +156,20 @@ public class GameActivity extends AppCompatActivity {
     Method that has logic to detect collisions.
     */
     private boolean isCollision(PlayerView playerView, Dot dot) {
-            float playerX = playerView.getX();
-            float playerY = playerView.getY();
-            int playerRadius = playerView.getRadius();
-            float dotX = dot.getX();
-            float dotY = dot.getY();
-            int dotRadius = dot.getRadius();
+        float playerX = playerView.getX();
+        float playerY = playerView.getY();
+        int playerRadius = playerView.getRadius();
+        float dotX = dot.getX();
+        float dotY = dot.getY();
+        int dotRadius = dot.getRadius();
 
             /*
             Creates a rectangle around dot, and checks for an intersection between player rect and
             dot rect. Intersection = collision.
              */
-            RectF playerRect = new RectF(playerX - playerRadius, playerY - playerRadius, playerX + playerRadius, playerY + playerRadius);
-            RectF dotRect = new RectF(dotX - dotRadius, dotY - dotRadius, dotX + dotRadius, dotY + dotRadius);
+        RectF playerRect = new RectF(playerX - playerRadius, playerY - playerRadius, playerX + playerRadius, playerY + playerRadius);
+        RectF dotRect = new RectF(dotX - dotRadius, dotY - dotRadius, dotX + dotRadius, dotY + dotRadius);
 
-            return playerRect.intersect(dotRect);
-        }
+        return playerRect.intersect(dotRect);
+    }
 }
