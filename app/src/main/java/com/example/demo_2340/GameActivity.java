@@ -30,7 +30,8 @@ public class GameActivity extends AppCompatActivity {
     private static final int MAX_DOTS = 20;
     private TextView dotCountTextView;
     private int dotCount = 0;
-
+    private double difficulty;
+    private int dotsToWin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,11 @@ public class GameActivity extends AppCompatActivity {
         playerX = screenWidth / 2;
         playerY = screenHeight / 2;
 
+
+        // Get difficulty selected from Main screen.
+        difficulty = getIntent().getDoubleExtra("difficulty", 1);
+        // 50 for easy, 75 for med, 100 for hard to win.
+        dotsToWin = (int) (100 * difficulty);
         // Create red dot
         playerView = new PlayerView(this, playerX, playerY, 100);
         gameLayout.addView(playerView);
@@ -148,8 +154,7 @@ public class GameActivity extends AppCompatActivity {
                 dotCount++;
 
                 dotCountTextView.setText("Dots Collected: " + dotCount);
-                if (dotCount >= 100) { // 100 dots collected needed to win.
-                    Log.d("DOTS", "GAME WIN" + dotCount);
+                if (dotCount >= dotsToWin) {
                     launchGameWinActivity();
                 }
             } else if (dot.isExpired()) { // Checks if dots have run out of time.
